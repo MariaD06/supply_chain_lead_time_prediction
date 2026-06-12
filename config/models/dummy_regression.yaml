@@ -1,0 +1,4 @@
+name: "DummyRegressor"
+estimator: "dummy"
+params:
+  strategy: "mean"
