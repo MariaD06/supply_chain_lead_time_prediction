@@ -1,0 +1,9 @@
+model,split,mae,rmse,r2,n_rows,best_params
+DummyRegressor,train,18.789923980607846,30.560237608048066,0.0,1819,{}
+DummyRegressor,test,18.69262061710595,27.935720047922118,-0.00029838914653557147,636,{}
+RidgeRegressor,train,13.422284553818036,23.653202905337757,0.4009453253346946,1819,{'alpha': 100.0}
+RidgeRegressor,test,12.882068678350832,21.39399017156493,0.41333063090910305,636,{'alpha': 100.0}
+RandomForestRegressor,train,10.06220083722259,19.097357010473356,0.6094891716649689,1819,"{'max_depth': 5, 'min_samples_leaf': 5, 'n_estimators': 300}"
+RandomForestRegressor,test,10.828113756490353,20.184754943700852,0.4777760419793572,636,"{'max_depth': 5, 'min_samples_leaf': 5, 'n_estimators': 300}"
+XGBoostRegressor,train,10.426095314995806,19.745895823869045,0.5825156214629963,1819,"{'learning_rate': 0.05, 'max_depth': 3, 'min_child_weight': 1, 'n_estimators': 100, 'reg_lambda': 10.0, 'subsample': 0.8}"
+XGBoostRegressor,test,10.867803171111166,20.076305222822846,0.48337263175833844,636,"{'learning_rate': 0.05, 'max_depth': 3, 'min_child_weight': 1, 'n_estimators': 100, 'reg_lambda': 10.0, 'subsample': 0.8}"

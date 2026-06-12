@@ -1,0 +1,31 @@
+project_name: ablation_all_features
+data:
+  input_path: data/processed/supply_chain_enriched_overlap.csv
+  target_col: lead_time_days
+  date_col: date
+  test_start_date: '2024-10-01'
+features:
+  numeric:
+  - distance_km
+  - weight_mt
+  - fuel_price_index
+  - geopolitical_risk_score
+  - carrier_reliability_score
+  - copper__usd_per_mt
+  categorical:
+  - origin_port
+  - destination_port
+  - transport_mode
+  - product_category
+  - weather_condition
+models:
+- config/models/dummy_regression.yaml
+- config/models/ridge_regression.yaml
+- config/models/random_forest_regression.yaml
+- config/models/xgboost_regression.yaml
+cv:
+  n_splits: 4
+  gap: 7
+output:
+  results_dir: results
+  model_dir: models

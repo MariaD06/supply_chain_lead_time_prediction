@@ -1,0 +1,25 @@
+model,fold,mae,rmse,r2,n_train,n_val,best_params
+DummyRegressor,1,19.142954086317722,31.724781439641486,-0.0030879994139159095,360.0,363.0,{}
+DummyRegressor,2,19.583653700337972,32.12471981434746,-3.0537828692445146e-06,723.0,363.0,{}
+DummyRegressor,3,20.17465990898437,34.26931924339355,-0.0009407671285832642,1086.0,363.0,{}
+DummyRegressor,4,17.24730626422326,24.764886562154967,-0.010449118874028773,1449.0,363.0,{}
+DummyRegressor,mean,19.03714348996583,30.720926764884368,-0.003620234799849298,,,{}
+DummyRegressor,std,1.2658765330173365,4.1248783097937975,0.0047321763039705955,,,{}
+RidgeRegressor,1,15.20633382293041,28.4688491333887,0.1922414215160697,360.0,363.0,{'alpha': 100.0}
+RidgeRegressor,2,17.251834679124958,27.910572768909326,0.24515092504996638,723.0,363.0,{'alpha': 100.0}
+RidgeRegressor,3,16.401793381300728,28.999116228549564,0.28325124282554603,1086.0,363.0,{'alpha': 100.0}
+RidgeRegressor,4,14.148494733731226,20.788309265458857,0.2879998226253213,1449.0,363.0,{'alpha': 100.0}
+RidgeRegressor,mean,15.752114154271831,26.541711849076613,0.25216085300422586,,,{'alpha': 100.0}
+RidgeRegressor,std,1.3590089730771633,3.8612655914809135,0.04431147873305967,,,{'alpha': 100.0}
+RandomForestRegressor,1,14.810733480871288,25.792877614776362,0.33695752277806024,360.0,363.0,"{'max_depth': 5, 'min_samples_leaf': 3, 'n_estimators': 100}"
+RandomForestRegressor,2,14.145091118198811,25.531580813431336,0.36834776083426624,723.0,363.0,"{'max_depth': 5, 'min_samples_leaf': 3, 'n_estimators': 100}"
+RandomForestRegressor,3,14.236128084171726,26.295552660918627,0.4106652781670438,1086.0,363.0,"{'max_depth': 5, 'min_samples_leaf': 3, 'n_estimators': 100}"
+RandomForestRegressor,4,13.098190725540961,21.5742746489015,0.23314338206940066,1449.0,363.0,"{'max_depth': 5, 'min_samples_leaf': 3, 'n_estimators': 100}"
+RandomForestRegressor,mean,14.072535852195696,24.798571434506954,0.33727848596219273,,,"{'max_depth': 5, 'min_samples_leaf': 3, 'n_estimators': 100}"
+RandomForestRegressor,std,0.7132813493065647,2.1727854690548494,0.07570808849637009,,,"{'max_depth': 5, 'min_samples_leaf': 3, 'n_estimators': 100}"
+XGBoostRegressor,1,14.410635551233923,25.413990396989924,0.3562941143819721,360.0,363.0,"{'learning_rate': 0.05, 'max_depth': 3, 'min_child_weight': 1, 'n_estimators': 100, 'reg_lambda': 10.0, 'subsample': 0.8}"
+XGBoostRegressor,2,14.925458676726366,26.072021619629847,0.34132368922589595,723.0,363.0,"{'learning_rate': 0.05, 'max_depth': 3, 'min_child_weight': 1, 'n_estimators': 100, 'reg_lambda': 10.0, 'subsample': 0.8}"
+XGBoostRegressor,3,14.636757005701055,27.11029386272658,0.37357962725347527,1086.0,363.0,"{'learning_rate': 0.05, 'max_depth': 3, 'min_child_weight': 1, 'n_estimators': 100, 'reg_lambda': 10.0, 'subsample': 0.8}"
+XGBoostRegressor,4,12.454931563106944,20.612809759347993,0.299970803636356,1449.0,363.0,"{'learning_rate': 0.05, 'max_depth': 3, 'min_child_weight': 1, 'n_estimators': 100, 'reg_lambda': 10.0, 'subsample': 0.8}"
+XGBoostRegressor,mean,14.106945699192073,24.802278909673586,0.3427920586244248,,,"{'learning_rate': 0.05, 'max_depth': 3, 'min_child_weight': 1, 'n_estimators': 100, 'reg_lambda': 10.0, 'subsample': 0.8}"
+XGBoostRegressor,std,1.1213149642205953,2.8789478563211186,0.031443048406137694,,,"{'learning_rate': 0.05, 'max_depth': 3, 'min_child_weight': 1, 'n_estimators': 100, 'reg_lambda': 10.0, 'subsample': 0.8}"
