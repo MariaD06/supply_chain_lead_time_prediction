@@ -143,7 +143,7 @@ Example prediction request:
     "destination_port": "Shanghai",
     "transport_mode": "Rail",
     "product_category": "Automotive",
-    "weather_condition": "Storm",
+    "weather_condition": "Storm"
 }
 ```
 
@@ -168,9 +168,9 @@ Completed:
 * model comparison and CV fold outputs
 * leakage and ablation diagnostics
 * conservative tree-model grids
-* add minimal tests
-* summarize final results
-* add FastAPI endpoint
+* minimal tests
+* final results summary
+* FastAPI endpoint
 
 
 To Dos: 
@@ -185,5 +185,6 @@ To Dos:
 * DuckDB / SQL
 * Jupyter
 * pytest
-* FastAPI, planned
+* FastAPI
+* Uvicorn
 * Docker, optional
