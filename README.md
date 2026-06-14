@@ -10,11 +10,11 @@ The use case is shipment-level tabular regression, not time-series forecasting.
 
 The current workflow includes:
 
-1. Preparing the modeling dataset with DuckDB SQL
-2. Joining monthly commodity-price data
-3. Running EDA checks for target validity, missingness, feature plausibility, and temporal split feasibility
-4. Training regression models with a chronological validation design
-5. Diagnosing unusually high tree-model performance with leakage checks and feature ablations
+1. Clean raw supply-chain and commodity-price files into SQL-ready CSV files
+2. Use DuckDB SQL to validate, join, and export the modeling dataset
+3. Run EDA and leakage diagnostics
+4. Train and evaluate regression models
+5. Serve predictions through FastAPI
 
 ## Data and Features
 
@@ -101,6 +101,62 @@ results/lead_time_regression/cv_fold_metrics.csv
 models/lead_time_model.joblib
 ```
 
+
+## Prediction API
+
+This project includes a minimal FastAPI endpoint for serving predictions from the trained scikit-learn pipeline. The API loads the fitted model from:
+
+```text
+models/lead_time_model.joblib
+```
+
+The API expects shipment information that would be available before or during shipment planning and returns the predicted shipment lead time in days.
+
+Run the API from the project root:
+
+```bash
+uvicorn src.api.main:app --reload
+```
+
+Then open the interactive API documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Available endpoints:
+
+* `GET /health`: checks whether the API is running
+* `POST /predict`: returns a predicted shipment lead time in days
+
+Example prediction request:
+
+```json
+{
+  "distance_km": 1200,
+  "weight_mt": 18,
+  "fuel_price_index": 1.25,
+  "geopolitical_risk_score": 0.4,
+  "carrier_reliability_score": 0.9,
+  "copper__usd_per_mt": 8200,
+  "origin_port": "Hamburg",
+  "destination_port": "Shanghai",
+  "transport_mode": "sea",
+  "product_category": "electronics",
+  "weather_condition": "clear"
+}
+```
+
+Example response:
+
+```json
+{
+  "predicted_lead_time_days": 14.7
+}
+```
+
+The local documentation URL only works while the API is running on your machine.
+
 ## Current Status
 
 Completed:
@@ -112,12 +168,12 @@ Completed:
 * model comparison and CV fold outputs
 * leakage and ablation diagnostics
 * conservative tree-model grids
-
-Next steps:
-
 * add minimal tests
 * summarize final results
-* optionally add FastAPI endpoint
+* add FastAPI endpoint
+
+
+To Dos: 
 * optionally add Docker setup
 
 ## Stack

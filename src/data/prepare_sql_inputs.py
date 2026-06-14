@@ -1,3 +1,5 @@
+"""Prepare cleaned CSV inputs used by the DuckDB SQL pipeline."""
+
 from pathlib import Path
 import re
 import pandas as pd
