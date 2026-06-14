@@ -133,17 +133,17 @@ Example prediction request:
 
 ```json
 {
-  "distance_km": 1200,
-  "weight_mt": 18,
-  "fuel_price_index": 1.25,
-  "geopolitical_risk_score": 0.4,
-  "carrier_reliability_score": 0.9,
-  "copper__usd_per_mt": 8200,
-  "origin_port": "Hamburg",
-  "destination_port": "Shanghai",
-  "transport_mode": "sea",
-  "product_category": "electronics",
-  "weather_condition": "clear"
+    "distance_km": 14285.36,
+    "weight_mt": 237.24,
+    "fuel_price_index": 2.3,
+    "geopolitical_risk_score": 7.5,
+    "carrier_reliability_score": 0.592,
+    "copper__usd_per_mt": 9464.43,
+    "origin_port": "Singapore",
+    "destination_port": "Shanghai",
+    "transport_mode": "Rail",
+    "product_category": "Automotive",
+    "weather_condition": "Storm",
 }
 ```
 
@@ -151,7 +151,7 @@ Example response:
 
 ```json
 {
-  "predicted_lead_time_days": 14.7
+  "predicted_lead_time_days": 38.14
 }
 ```
 
