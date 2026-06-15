@@ -1,33 +1,53 @@
 # Supply Chain Lead Time Prediction
 
+Shipment lead-time regression pipeline: DuckDB SQL preparation → scikit-learn / XGBoost training with chronological validation → FastAPI prediction endpoint.
+
 ## Business Problem
 
-Unexpectedly long shipment lead times can create planning problems, stock risks, and delivery delays. This project predicts shipment `lead_time_days` from information assumed to be available at or before shipment planning.
+Unexpectedly long shipment lead times create planning problems, stock risks, and delivery delays. This project predicts shipment `lead_time_days` from information available at or before shipment planning.
 
 The use case is shipment-level tabular regression, not time-series forecasting.
 
 ## Project Overview
 
-The current workflow includes:
-
-1. Clean raw supply-chain and commodity-price files into SQL-ready CSV files
+1. Clean raw supply-chain and commodity-price files into SQL-ready CSVs
 2. Use DuckDB SQL to validate, join, and export the modeling dataset
 3. Run EDA and leakage diagnostics
-4. Train and evaluate regression models
-5. Serve predictions through FastAPI
+4. Train and evaluate regression models with chronological validation
+5. Serve predictions through a FastAPI endpoint
+
+## Quickstart
+
+**Requirements:** Python 3.10+, [DuckDB CLI](https://duckdb.org/docs/installation/) for the SQL pipeline step.
+
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
+
+# 2. Prepare cleaned CSVs from raw data
+python src/data/prepare_sql_inputs.py
+
+# 3. Run the DuckDB SQL pipeline (validate, join, export modeling dataset)
+duckdb < sql/01_load_and_prepare.sql
+duckdb < sql/02_validate.sql
+duckdb < sql/03_export.sql
+
+# 4. Train models and save the best pipeline
+python -m src.models.train_regression
+
+# 5. Start the prediction API
+uvicorn src.api.main:app --reload
+```
+
+## Testing
+
+```bash
+pytest tests/
+```
 
 ## Data and Features
 
-The modeling dataset is:
-
-```text
-data/processed/supply_chain_enriched_overlap.csv
-```
-
-SQL-derived variables include:
-
-* `month`, derived from `date` for joining and temporal structure
-* `copper__usd_per_mt`, added through the monthly commodity-price join
+The modeling dataset is built from raw supply-chain shipment records joined with World Bank monthly commodity prices via DuckDB SQL.
 
 Target:
 
@@ -52,84 +72,54 @@ Categorical features:
 
 Excluded from model inputs:
 
-* `shipment_id`
-* `date`
-* `month`
-* `lead_time_days`
-* `disruption_occurred`
-
-`disruption_occurred` is excluded because it is treated as likely outcome-like information that should not be assumed known before shipment completion.
+* `shipment_id`, `date`, `month` — identifiers and temporal join keys
+* `lead_time_days` — target variable
+* `disruption_occurred` — excluded as outcome-like information not assumed available before shipment completion
 
 ## Modeling Approach
 
-The modeling pipeline uses:
-
-* chronological final holdout test set based on `data.test_start_date`
-* `TimeSeriesSplit` on the development period
+* Chronological final holdout test set based on `data.test_start_date`
+* `TimeSeriesSplit` cross-validation on the development period
 * `GridSearchCV` with mean absolute error as the selection metric
-* numeric scaling and one-hot encoding inside the pipeline
-* final evaluation once on the held-out test period
+* Numeric scaling and one-hot encoding inside the sklearn pipeline
+* Final evaluation once on the held-out test period
+* Best model selected by CV performance, not test performance
 
-Models included:
+Models compared:
 
-* DummyRegressor baseline
+* DummyRegressor (baseline)
 * Ridge regression
 * Random Forest regression
 * XGBoost regression
-
-The best model is selected by cross-validation performance, not by final test performance.
 
 ## Diagnostics
 
 Tree-based models achieved very high performance. To check whether this was caused by leakage or data structure, the project includes a diagnostic notebook with leakage checks and feature ablations.
 
-The ablations showed that performance is mainly driven by:
-
-* `distance_km`
-* `transport_mode`
-* `weather_condition`
-
-This suggests that the dataset contains strong nonlinear, rule-like structure. Results should therefore be interpreted as performance on a simulated dataset, not as evidence of equal performance in a noisy real-world logistics system.
-
-## Outputs
-
-The training script saves:
-
-```text
-results/lead_time_regression/model_comparison.csv
-results/lead_time_regression/cv_fold_metrics.csv
-models/lead_time_model.joblib
-```
-
+Ablations showed performance is mainly driven by `distance_km`, `transport_mode`, and `weather_condition`, suggesting the dataset contains strong nonlinear, rule-like structure. Results should be interpreted as performance on a simulated dataset, not as evidence of equal performance in a noisy real-world logistics system.
 
 ## Prediction API
 
-This project includes a minimal FastAPI endpoint for serving predictions from the trained scikit-learn pipeline. The API loads the fitted model from:
+The FastAPI endpoint serves predictions from the trained scikit-learn pipeline. The model is loaded once at server startup.
 
-```text
-models/lead_time_model.joblib
-```
-
-The API expects shipment information that would be available before or during shipment planning and returns the predicted shipment lead time in days.
-
-Run the API from the project root:
+Run from the project root:
 
 ```bash
 uvicorn src.api.main:app --reload
 ```
 
-Then open the interactive API documentation:
+Interactive API docs (while the server is running):
 
-```text
+```
 http://127.0.0.1:8000/docs
 ```
 
-Available endpoints:
+Endpoints:
 
-* `GET /health`: checks whether the API is running
-* `POST /predict`: returns a predicted shipment lead time in days
+* `GET /health` — checks whether the API is running
+* `POST /predict` — returns a predicted shipment lead time in days
 
-Example prediction request:
+Example request:
 
 ```json
 {
@@ -155,36 +145,21 @@ Example response:
 }
 ```
 
-The local documentation URL only works while the API is running on your machine.
+## Outputs
 
-## Current Status
+Training produces:
 
-Completed:
-
-* SQL data preparation
-* enriched modeling dataset
-* EDA notebook
-* TimeSeriesSplit regression pipeline
-* model comparison and CV fold outputs
-* leakage and ablation diagnostics
-* conservative tree-model grids
-* minimal tests
-* final results summary
-* FastAPI endpoint
-
-
-To Dos: 
-* optionally add Docker setup
+```
+results/lead_time_regression/model_comparison.csv
+results/lead_time_regression/cv_fold_metrics.csv
+models/lead_time_model.joblib
+```
 
 ## Stack
 
 * Python
-* pandas
-* scikit-learn
-* XGBoost
-* DuckDB / SQL
+* pandas · numpy · scikit-learn · XGBoost
+* DuckDB (CLI)
 * Jupyter
+* FastAPI · Uvicorn
 * pytest
-* FastAPI
-* Uvicorn
-* Docker, optional
