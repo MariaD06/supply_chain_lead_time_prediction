@@ -1,5 +1,6 @@
 """Tests for the FastAPI prediction endpoints."""
 
+import pytest
 from fastapi.testclient import TestClient
 
 from src.api import main
@@ -13,22 +14,23 @@ class FakeModel:
         return [38.14]
 
 
-def test_health_returns_ok():
-    # Checks that the API app starts and exposes the health endpoint.
-    client = TestClient(main.app)
+@pytest.fixture()
+def client(monkeypatch):
+    """Return a TestClient with the real model load patched out."""
+    monkeypatch.setattr(main, "load_model", lambda: FakeModel())
+    # TestClient handles the lifespan (startup/shutdown) automatically.
+    with TestClient(main.app) as c:
+        yield c
 
+
+def test_health_returns_ok(client):
     response = client.get("/health")
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
 
-def test_predict_returns_predicted_lead_time_days(monkeypatch):
-    # Checks that valid JSON is converted into model input and returned as a prediction.
-    monkeypatch.setattr(main, "load_model", lambda: FakeModel())
-
-    client = TestClient(main.app)
-
+def test_predict_returns_predicted_lead_time_days(client):
     payload = {
         "distance_km": 14285.36,
         "weight_mt": 237.24,

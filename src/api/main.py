@@ -1,11 +1,12 @@
 """FastAPI app for shipment lead-time prediction."""
 
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
 import joblib
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel, Field
 
 
@@ -44,13 +45,23 @@ class ShipmentFeatures(BaseModel):
     weather_condition: str = Field("Storm")
 
 
-# ASGI servers such as Uvicorn use this object to run the API.
-app = FastAPI(title="Supply Chain Lead Time Prediction API")
-
-
 def load_model(model_path: Path = MODEL_PATH) -> Any:
-    """Load the trained sklearn pipeline."""
+    """Load the trained sklearn pipeline from disk."""
     return joblib.load(model_path)
+
+
+# The lifespan context loads the model once when the server starts
+# and makes it available via app.state for the lifetime of the process.
+# This avoids the cost of a disk read on every prediction request.
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app.state.model = load_model()
+    yield
+    # Nothing to clean up for a joblib model, but the pattern supports it.
+
+
+# ASGI servers such as Uvicorn use this object to run the API.
+app = FastAPI(title="Supply Chain Lead Time Prediction API", lifespan=lifespan)
 
 
 @app.get("/health")
@@ -60,9 +71,9 @@ def health() -> dict[str, str]:
 
 
 @app.post("/predict")
-def predict(features: ShipmentFeatures) -> dict[str, float]:
+def predict(features: ShipmentFeatures, request: Request) -> dict[str, float]:
     """Predict shipment lead time in days."""
-    model = load_model()
+    model = request.app.state.model
 
     # Convert the validated request into the one-row DataFrame expected by sklearn.
     input_df = pd.DataFrame([features.model_dump()])
@@ -73,3 +84,4 @@ def predict(features: ShipmentFeatures) -> dict[str, float]:
     prediction = model.predict(input_df)[0]
 
     return {"predicted_lead_time_days": round(float(prediction), 2)}
+
