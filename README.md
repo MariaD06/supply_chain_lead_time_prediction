@@ -1,5 +1,7 @@
 # Supply Chain Lead Time Prediction
 
+![CI](https://github.com/MariaD06/supply_chain_lead_time_prediction/actions/workflows/ci.yml/badge.svg)
+
 Shipment lead-time regression pipeline: DuckDB SQL preparation → scikit-learn / XGBoost training with chronological validation → FastAPI prediction endpoint.
 
 ## Business Problem
