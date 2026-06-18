@@ -147,6 +147,21 @@ Example response:
 }
 ```
 
+## Docker
+
+Build and run the prediction API in a container:
+
+```bash
+docker build -t supply-chain-api .
+docker run --rm -p 8000:8000 supply-chain-api
+```
+
+The API will be available at `http://localhost:8000`. Use `http://localhost:8000/docs` for the interactive Swagger UI.
+
+To stop the container, press `Ctrl+C` in the terminal where it is running.
+
+> **Note:** The container serves predictions only — it requires `models/lead_time_model.joblib` to be present (already committed to the repo). To retrain the model, follow the Quickstart steps locally first.
+
 ## Outputs
 
 Training produces:
