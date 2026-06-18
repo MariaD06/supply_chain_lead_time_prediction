@@ -39,6 +39,10 @@ python -m src.models.train_regression
 
 # 5. Start the prediction API
 uvicorn src.api.main:app --reload
+
+# Or run the API in Docker (no local Python setup needed)
+docker build -t supply-chain-api .
+docker run --rm -p 8000:8000 supply-chain-api
 ```
 
 ## Testing
