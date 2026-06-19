@@ -185,3 +185,5 @@ models/lead_time_model.joblib
 * FastAPI · Uvicorn
 * pytest
 * Docker
+
+<!-- CD test -->
