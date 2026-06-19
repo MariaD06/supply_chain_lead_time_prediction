@@ -166,6 +166,20 @@ To stop the container, press `Ctrl+C` in the terminal where it is running.
 
 > **Note:** The container serves predictions only — it requires `models/lead_time_model.joblib` to be present (already committed to the repo). To retrain the model, follow the Quickstart steps locally first.
 
+## Live Deployment
+
+The API is deployed on Google Cloud Run with continuous deployment — every push to `main` automatically rebuilds and redeploys the service via Cloud Build.
+
+**Live API:** https://supply-chain-api-325731847289.europe-west1.run.app
+
+Try it:
+
+```bash
+curl https://supply-chain-api-325731847289.europe-west1.run.app/health
+```
+
+Interactive docs: https://supply-chain-api-325731847289.europe-west1.run.app/docs
+
 ## Outputs
 
 Training produces:
@@ -186,4 +200,4 @@ models/lead_time_model.joblib
 * pytest
 * Docker
 
-<!-- CD test -->
+
