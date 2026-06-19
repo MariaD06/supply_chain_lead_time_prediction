@@ -2,6 +2,8 @@
 
 ![CI](https://github.com/MariaD06/supply_chain_lead_time_prediction/actions/workflows/ci.yml/badge.svg)
 
+[![Live API](https://img.shields.io/badge/API-live-brightgreen)](https://supply-chain-api-325731847289.europe-west1.run.app/health)
+
 Shipment lead-time regression pipeline: DuckDB SQL preparation → scikit-learn / XGBoost training with chronological validation → FastAPI prediction endpoint.
 
 ## Business Problem
@@ -21,6 +23,8 @@ The use case is shipment-level tabular regression, not time-series forecasting.
 ## Quickstart
 
 **Requirements:** Python 3.10+, [DuckDB CLI](https://duckdb.org/docs/installation/) for the SQL pipeline step.
+
+> `requirements.txt` includes development/training extras (e.g. pytest); `requirements-runtime.txt` is the slim dependency set used by the Docker container.
 
 ```bash
 # 1. Install dependencies
@@ -199,5 +203,6 @@ models/lead_time_model.joblib
 * FastAPI · Uvicorn
 * pytest
 * Docker
-
+* Google Cloud Run
+* Google Cloud Build (CI/CD)
 
