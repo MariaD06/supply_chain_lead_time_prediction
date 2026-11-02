@@ -6,6 +6,8 @@
 
 Shipment lead-time regression pipeline: DuckDB SQL preparation → scikit-learn / XGBoost training with chronological validation → FastAPI prediction endpoint.
 
+Project status: Portfolio project / technical demonstration. The API can be run locally with FastAPI or Docker. The original Google Cloud Run deployment is no longer active.
+
 ## Business Problem
 
 Unexpectedly long shipment lead times create planning problems, stock risks, and delivery delays. This project predicts shipment `lead_time_days` from information available at or before shipment planning.
@@ -170,19 +172,13 @@ To stop the container, press `Ctrl+C` in the terminal where it is running.
 
 > **Note:** The container serves predictions only — it requires `models/lead_time_model.joblib` to be present (already committed to the repo). To retrain the model, follow the Quickstart steps locally first.
 
-## Live Deployment
+## Cloud Deployment
 
-The API is deployed on Google Cloud Run with continuous deployment — every push to `main` automatically rebuilds and redeploys the service via Cloud Build.
+The API was originally deployed on Google Cloud Run with continuous deployment via Google Cloud Build. Pushes to main automatically triggered a container rebuild and redeployment.
 
-**Live API:** https://supply-chain-api-325731847289.europe-west1.run.app
+Deployment status: The public Cloud Run endpoint is no longer active due to changes in the Google Cloud environment. The deployment setup is retained in this repository to demonstrate the CI/CD and containerized deployment architecture.
 
-Try it:
-
-```bash
-curl https://supply-chain-api-325731847289.europe-west1.run.app/health
-```
-
-Interactive docs: https://supply-chain-api-325731847289.europe-west1.run.app/docs
+The API can still be run locally using FastAPI or Docker as described above.
 
 ## Outputs
 
