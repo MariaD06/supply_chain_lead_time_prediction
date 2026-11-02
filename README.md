@@ -2,7 +2,6 @@
 
 ![CI](https://github.com/MariaD06/supply_chain_lead_time_prediction/actions/workflows/ci.yml/badge.svg)
 
-[![Live API](https://img.shields.io/badge/API-live-brightgreen)](https://supply-chain-api-325731847289.europe-west1.run.app/health)
 
 Shipment lead-time regression pipeline: DuckDB SQL preparation → scikit-learn / XGBoost training with chronological validation → FastAPI prediction endpoint.
 
